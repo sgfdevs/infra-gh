@@ -39,3 +39,35 @@ module "infrastructure_repository" {
     actor_type = "Team"
   }]
 }
+
+module "cms_methodconf_com" {
+  source = "./modules/github-repository"
+
+  name        = "cms.methodconf.com"
+  description = "MethodConf CMS"
+  required_checks = [{
+    context        = "CI checks"
+    integration_id = local.github_actions_integration_id
+  }]
+}
+
+module "methodconf_com" {
+  source = "./modules/github-repository"
+
+  name = "methodconf.com"
+  required_checks = [{
+    context        = "CI checks"
+    integration_id = local.github_actions_integration_id
+  }]
+}
+
+module "sgf_dev" {
+  source = "./modules/github-repository"
+
+  name   = "sgf.dev"
+  topics = ["hacktoberfest"]
+  required_checks = [{
+    context        = "CI checks"
+    integration_id = local.github_actions_integration_id
+  }]
+}
