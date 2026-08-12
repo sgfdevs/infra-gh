@@ -1,5 +1,5 @@
-module "infra_platform_admins" {
-  source = "./modules/github-team"
+module "infra_platform_admins_team" {
+  source = "./modules/team"
 
   name = "Infra Platform Admins"
   members = [
@@ -14,8 +14,8 @@ module "infra_platform_admins" {
   ]
 }
 
-module "infra_maintainers" {
-  source = "./modules/github-team"
+module "infra_maintainers_team" {
+  source = "./modules/team"
 
   name = "Infra Maintainers"
   members = [{
@@ -24,8 +24,8 @@ module "infra_maintainers" {
   }]
 }
 
-module "sgf_devs_website_maintainers" {
-  source = "./modules/github-team"
+module "sgf_devs_website_maintainers_team" {
+  source = "./modules/team"
 
   name        = "SGF Devs Website Maintainers"
   description = "Maintainers of the SGF Devs website"
@@ -35,8 +35,8 @@ module "sgf_devs_website_maintainers" {
   }]
 }
 
-module "methodconf_maintainers" {
-  source = "./modules/github-team"
+module "methodconf_maintainers_team" {
+  source = "./modules/team"
 
   name        = "MethodConf Maintainers"
   description = "Maintainers of MethodConf applications"
@@ -46,8 +46,8 @@ module "methodconf_maintainers" {
   }]
 }
 
-module "super_admins" {
-  source = "./modules/github-team"
+module "super_admins_team" {
+  source = "./modules/team"
 
   name        = "Super Admins"
   description = "Administrators with ruleset bypass access to managed repositories"
@@ -57,8 +57,8 @@ module "super_admins" {
   }]
 }
 
-module "board" {
-  source = "./modules/github-team"
+module "board_team" {
+  source = "./modules/team"
 
   name = "Board"
   members = [
@@ -81,8 +81,8 @@ module "board" {
   ]
 }
 
-module "hack4good" {
-  source = "./modules/github-team"
+module "hack4good_team" {
+  source = "./modules/team"
 
   name = "Hack4Good"
   members = [

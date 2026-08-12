@@ -1,6 +1,12 @@
 locals {
   github_actions_integration_id = 15368
 
+  super_admin_team = {
+    id         = module.super_admins_team.id
+    permission = "admin"
+    bypass     = true
+  }
+
   infrastructure_repositories = {
     infra-app-config = {
       required_check = "Terraform checks"
@@ -26,7 +32,7 @@ locals {
 module "infrastructure_repository" {
   for_each = local.infrastructure_repositories
 
-  source = "./modules/github-repository"
+  source = "./modules/repository"
 
   name   = each.key
   topics = ["infra"]
@@ -34,26 +40,24 @@ module "infrastructure_repository" {
     context        = each.value.required_check
     integration_id = local.github_actions_integration_id
   }]
-  teams = [
-    {
-      id         = module.infra_platform_admins.id
-      permission = "admin"
-      bypass     = true
-    },
-    {
-      id         = module.infra_maintainers.id
-      permission = "maintain"
-    },
-    {
-      id         = module.super_admins.id
-      permission = "admin"
-      bypass     = true
-    },
-  ]
+  teams = concat(
+    [
+      {
+        id         = module.infra_platform_admins_team.id
+        permission = "admin"
+        bypass     = true
+      },
+      {
+        id         = module.infra_maintainers_team.id
+        permission = "maintain"
+      },
+    ],
+    [local.super_admin_team],
+  )
 }
 
-module "cms_methodconf_com" {
-  source = "./modules/github-repository"
+module "cms_methodconf_com_repository" {
+  source = "./modules/repository"
 
   name        = "cms.methodconf.com"
   description = "MethodConf CMS"
@@ -61,42 +65,34 @@ module "cms_methodconf_com" {
     context        = "CI checks"
     integration_id = local.github_actions_integration_id
   }]
-  teams = [
-    {
-      id         = module.methodconf_maintainers.id
+  teams = concat(
+    [{
+      id         = module.methodconf_maintainers_team.id
       permission = "maintain"
-    },
-    {
-      id         = module.super_admins.id
-      permission = "admin"
-      bypass     = true
-    },
-  ]
+    }],
+    [local.super_admin_team],
+  )
 }
 
-module "methodconf_com" {
-  source = "./modules/github-repository"
+module "methodconf_com_repository" {
+  source = "./modules/repository"
 
   name = "methodconf.com"
   required_checks = [{
     context        = "CI checks"
     integration_id = local.github_actions_integration_id
   }]
-  teams = [
-    {
-      id         = module.methodconf_maintainers.id
+  teams = concat(
+    [{
+      id         = module.methodconf_maintainers_team.id
       permission = "maintain"
-    },
-    {
-      id         = module.super_admins.id
-      permission = "admin"
-      bypass     = true
-    },
-  ]
+    }],
+    [local.super_admin_team],
+  )
 }
 
-module "sgf_dev" {
-  source = "./modules/github-repository"
+module "sgf_dev_repository" {
+  source = "./modules/repository"
 
   name   = "sgf.dev"
   topics = ["hacktoberfest"]
@@ -104,33 +100,25 @@ module "sgf_dev" {
     context        = "CI checks"
     integration_id = local.github_actions_integration_id
   }]
-  teams = [
-    {
-      id         = module.sgf_devs_website_maintainers.id
+  teams = concat(
+    [{
+      id         = module.sgf_devs_website_maintainers_team.id
       permission = "maintain"
-    },
-    {
-      id         = module.super_admins.id
-      permission = "admin"
-      bypass     = true
-    },
-  ]
+    }],
+    [local.super_admin_team],
+  )
 }
 
-module "hack4goodsgf_com" {
-  source = "./modules/github-repository"
+module "hack4goodsgf_com_repository" {
+  source = "./modules/repository"
 
   name        = "hack4goodsgf.com"
   description = "Custom WordPress image for hack4goodsgf.com"
-  teams = [
-    {
-      id         = module.hack4good.id
+  teams = concat(
+    [{
+      id         = module.hack4good_team.id
       permission = "push"
-    },
-    {
-      id         = module.super_admins.id
-      permission = "admin"
-      bypass     = true
-    },
-  ]
+    }],
+    [local.super_admin_team],
+  )
 }
