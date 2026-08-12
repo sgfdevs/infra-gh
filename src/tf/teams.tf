@@ -1,33 +1,26 @@
 resource "github_team" "platform_admins" {
-  name                 = "Platform Admins"
+  name                 = "Infra Platform Admins"
   description          = ""
   privacy              = "closed"
   notification_setting = "notifications_enabled"
 }
 
-resource "github_team" "admins" {
-  name                 = "Admins"
+resource "github_team" "infra_maintainers" {
+  name                 = "Infra Maintainers"
   description          = ""
   privacy              = "closed"
   notification_setting = "notifications_enabled"
 }
 
-resource "github_team" "lifestrengths" {
-  name                 = "LifeStrengths"
+resource "github_team" "board" {
+  name                 = "Board"
   description          = ""
   privacy              = "closed"
   notification_setting = "notifications_enabled"
 }
 
-resource "github_team" "treasurer" {
-  name                 = "Treasurer"
-  description          = ""
-  privacy              = "closed"
-  notification_setting = "notifications_enabled"
-}
-
-resource "github_team" "website_volunteers" {
-  name                 = "Website Volunteers"
+resource "github_team" "hack4good" {
+  name                 = "Hack4Good"
   description          = ""
   privacy              = "closed"
   notification_setting = "notifications_enabled"
@@ -36,8 +29,7 @@ resource "github_team" "website_volunteers" {
 resource "github_team_membership" "platform_admins" {
   for_each = {
     glitchedmob = "maintainer"
-    Ryan-DL     = "member"
-    sm0862512   = "member"
+    Ryan-DL     = "maintainer"
   }
 
   team_id  = github_team.platform_admins.id
@@ -45,45 +37,32 @@ resource "github_team_membership" "platform_admins" {
   role     = each.value
 }
 
-resource "github_team_membership" "admins" {
-  team_id  = github_team.admins.id
-  username = "mykebates"
+resource "github_team_membership" "infra_maintainers" {
+  team_id  = github_team.infra_maintainers.id
+  username = "sm0862512"
   role     = "maintainer"
 }
 
-resource "github_team_membership" "lifestrengths" {
+resource "github_team_membership" "board" {
   for_each = {
     glitchedmob = "maintainer"
-    pureux      = "member"
+    jenn8421    = "maintainer"
+    Motter360   = "maintainer"
+    Ryan-DL     = "maintainer"
   }
 
-  team_id  = github_team.lifestrengths.id
+  team_id  = github_team.board.id
   username = each.key
   role     = each.value
 }
 
-resource "github_team_membership" "treasurer" {
+resource "github_team_membership" "hack4good" {
   for_each = {
     glitchedmob = "maintainer"
-    Motter360   = "member"
+    jason-klein = "member"
   }
 
-  team_id  = github_team.treasurer.id
-  username = each.key
-  role     = each.value
-}
-
-resource "github_team_membership" "website_volunteers" {
-  for_each = {
-    glitchedmob = "maintainer"
-    KalonOhm    = "member"
-    KCSBach     = "member"
-    Motter360   = "member"
-    shaversj    = "member"
-    Techhead404 = "member"
-  }
-
-  team_id  = github_team.website_volunteers.id
+  team_id  = github_team.hack4good.id
   username = each.key
   role     = each.value
 }
