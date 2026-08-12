@@ -1,6 +1,11 @@
 locals {
   github_actions_integration_id = 15368
 
+  super_admin_bypass_actor = {
+    actor_id   = github_team.super_admins.id
+    actor_type = "Team"
+  }
+
   infrastructure_repositories = {
     infra-app-config = {
       required_check = "Terraform checks"
@@ -34,10 +39,13 @@ module "infrastructure_repository" {
     context        = each.value.required_check
     integration_id = local.github_actions_integration_id
   }]
-  bypass_actors = [{
-    actor_id   = github_team.platform_admins.id
-    actor_type = "Team"
-  }]
+  bypass_actors = [
+    {
+      actor_id   = github_team.platform_admins.id
+      actor_type = "Team"
+    },
+    local.super_admin_bypass_actor,
+  ]
 }
 
 module "cms_methodconf_com" {
@@ -49,6 +57,7 @@ module "cms_methodconf_com" {
     context        = "CI checks"
     integration_id = local.github_actions_integration_id
   }]
+  bypass_actors = [local.super_admin_bypass_actor]
 }
 
 module "methodconf_com" {
@@ -59,6 +68,7 @@ module "methodconf_com" {
     context        = "CI checks"
     integration_id = local.github_actions_integration_id
   }]
+  bypass_actors = [local.super_admin_bypass_actor]
 }
 
 module "sgf_dev" {
@@ -70,4 +80,5 @@ module "sgf_dev" {
     context        = "CI checks"
     integration_id = local.github_actions_integration_id
   }]
+  bypass_actors = [local.super_admin_bypass_actor]
 }
