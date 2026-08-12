@@ -63,12 +63,20 @@ variable "ruleset_enforcement" {
   }
 }
 
-variable "bypass_actors" {
-  description = "Actors allowed to bypass the main branch ruleset"
-  type = set(object({
-    actor_id    = number
-    actor_type  = string
-    bypass_mode = optional(string, "always")
+variable "teams" {
+  description = "Teams with access to the repository"
+  type = list(object({
+    id         = number
+    permission = string
+    bypass     = optional(bool, false)
   }))
   default = []
+
+  validation {
+    condition = alltrue([
+      for team in var.teams :
+      contains(["pull", "triage", "push", "maintain", "admin"], team.permission)
+    ])
+    error_message = "Team permissions must be pull, triage, push, maintain, or admin."
+  }
 }

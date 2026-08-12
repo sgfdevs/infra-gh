@@ -1,11 +1,6 @@
 locals {
   github_actions_integration_id = 15368
 
-  super_admin_bypass_actor = {
-    actor_id   = github_team.super_admins.id
-    actor_type = "Team"
-  }
-
   infrastructure_repositories = {
     infra-app-config = {
       required_check = "Terraform checks"
@@ -39,12 +34,21 @@ module "infrastructure_repository" {
     context        = each.value.required_check
     integration_id = local.github_actions_integration_id
   }]
-  bypass_actors = [
+  teams = [
     {
-      actor_id   = github_team.platform_admins.id
-      actor_type = "Team"
+      id         = module.infra_platform_admins.id
+      permission = "admin"
+      bypass     = true
     },
-    local.super_admin_bypass_actor,
+    {
+      id         = module.infra_maintainers.id
+      permission = "maintain"
+    },
+    {
+      id         = module.super_admins.id
+      permission = "admin"
+      bypass     = true
+    },
   ]
 }
 
@@ -57,7 +61,17 @@ module "cms_methodconf_com" {
     context        = "CI checks"
     integration_id = local.github_actions_integration_id
   }]
-  bypass_actors = [local.super_admin_bypass_actor]
+  teams = [
+    {
+      id         = module.methodconf_maintainers.id
+      permission = "maintain"
+    },
+    {
+      id         = module.super_admins.id
+      permission = "admin"
+      bypass     = true
+    },
+  ]
 }
 
 module "methodconf_com" {
@@ -68,7 +82,17 @@ module "methodconf_com" {
     context        = "CI checks"
     integration_id = local.github_actions_integration_id
   }]
-  bypass_actors = [local.super_admin_bypass_actor]
+  teams = [
+    {
+      id         = module.methodconf_maintainers.id
+      permission = "maintain"
+    },
+    {
+      id         = module.super_admins.id
+      permission = "admin"
+      bypass     = true
+    },
+  ]
 }
 
 module "sgf_dev" {
@@ -80,5 +104,33 @@ module "sgf_dev" {
     context        = "CI checks"
     integration_id = local.github_actions_integration_id
   }]
-  bypass_actors = [local.super_admin_bypass_actor]
+  teams = [
+    {
+      id         = module.sgf_devs_website_maintainers.id
+      permission = "maintain"
+    },
+    {
+      id         = module.super_admins.id
+      permission = "admin"
+      bypass     = true
+    },
+  ]
+}
+
+module "hack4goodsgf_com" {
+  source = "./modules/github-repository"
+
+  name        = "hack4goodsgf.com"
+  description = "Custom WordPress image for hack4goodsgf.com"
+  teams = [
+    {
+      id         = module.hack4good.id
+      permission = "push"
+    },
+    {
+      id         = module.super_admins.id
+      permission = "admin"
+      bypass     = true
+    },
+  ]
 }

@@ -22,6 +22,14 @@ resource "github_repository" "this" {
   delete_branch_on_merge = true
 }
 
+resource "github_team_repository" "this" {
+  count = length(var.teams)
+
+  team_id    = var.teams[count.index].id
+  repository = github_repository.this.name
+  permission = var.teams[count.index].permission
+}
+
 resource "github_repository_ruleset" "main" {
   name        = "Protect main"
   repository  = github_repository.this.name
@@ -36,12 +44,12 @@ resource "github_repository_ruleset" "main" {
   }
 
   dynamic "bypass_actors" {
-    for_each = var.bypass_actors
+    for_each = [for team in var.teams : team if team.bypass]
 
     content {
-      actor_id    = bypass_actors.value.actor_id
-      actor_type  = bypass_actors.value.actor_type
-      bypass_mode = bypass_actors.value.bypass_mode
+      actor_id    = bypass_actors.value.id
+      actor_type  = "Team"
+      bypass_mode = "always"
     }
   }
 
