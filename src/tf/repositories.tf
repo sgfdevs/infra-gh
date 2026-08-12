@@ -54,12 +54,7 @@ resource "github_repository_ruleset" "infra_dns_main" {
       strict_required_status_checks_policy = true
 
       required_check {
-        context        = "validate / validate"
-        integration_id = 15368
-      }
-
-      required_check {
-        context        = "plan / plan"
+        context        = "Terraform checks"
         integration_id = 15368
       }
     }
