@@ -11,7 +11,7 @@ variable "description" {
 
 variable "members" {
   description = "Team members and their roles"
-  type = set(object({
+  type = list(object({
     username = string
     role     = optional(string, "member")
   }))
