@@ -1,19 +1,12 @@
 resource "github_membership" "organization" {
   for_each = {
-    fredlawl      = "admin"
-    glitchedmob   = "admin"
-    jason-klein   = "admin"
-    Joey-Powers13 = "member"
-    KalonOhm      = "member"
-    KCSBach       = "member"
-    Motter360     = "member"
-    mykebates     = "admin"
-    pureux        = "member"
-    Ryan-DL       = "member"
-    shaversj      = "member"
-    sm0862512     = "member"
-    Techhead404   = "member"
-    trankin       = "admin"
+    fredlawl    = "member"
+    glitchedmob = "admin"
+    jason-klein = "member"
+    jenn8421    = "admin"
+    Motter360   = "admin"
+    Ryan-DL     = "admin"
+    sm0862512   = "member"
   }
 
   username = each.key
