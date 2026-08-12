@@ -1,0 +1,4 @@
+export AWS_DEFAULT_PROFILE="your-aws-profile-name"
+export GITHUB_APP_ID="your-github-app-id"
+export GITHUB_APP_INSTALLATION_ID="your-github-app-installation-id"
+export GITHUB_APP_PEM_FILE="$(< /path/to/github-app-private-key.pem)"
