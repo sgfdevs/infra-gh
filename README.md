@@ -22,5 +22,3 @@ make help
 make tf-init
 make tf-plan
 ```
-
-Authenticated runs use `GITHUB_APP_ID`, `GITHUB_APP_INSTALLATION_ID`, and `GITHUB_APP_PEM_FILE` as shown in `.envrc.example`.
