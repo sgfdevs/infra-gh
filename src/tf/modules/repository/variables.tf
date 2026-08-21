@@ -52,13 +52,10 @@ variable "required_approving_review_count" {
   }
 }
 
-variable "review_bypass_actors" {
-  description = "Actors allowed to bypass required approving reviews through pull requests"
-  type = set(object({
-    actor_id   = number
-    actor_type = string
-  }))
-  default = []
+variable "review_exempt_integrations" {
+  description = "GitHub Apps exempt from required approving reviews"
+  type        = set(number)
+  default     = []
 }
 
 variable "ruleset_enforcement" {

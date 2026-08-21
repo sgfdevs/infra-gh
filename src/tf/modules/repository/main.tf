@@ -64,7 +64,7 @@ resource "github_repository_ruleset" "main" {
     pull_request {
       allowed_merge_methods             = ["rebase", "squash"]
       dismiss_stale_reviews_on_push     = true
-      required_approving_review_count   = length(var.review_bypass_actors) == 0 ? var.required_approving_review_count : 0
+      required_approving_review_count   = length(var.review_exempt_integrations) == 0 ? var.required_approving_review_count : 0
       required_review_thread_resolution = true
     }
 
@@ -88,7 +88,7 @@ resource "github_repository_ruleset" "main" {
 }
 
 resource "github_repository_ruleset" "required_reviews" {
-  count = length(var.review_bypass_actors) == 0 ? 0 : 1
+  count = length(var.review_exempt_integrations) == 0 ? 0 : 1
 
   name        = "Require pull request reviews"
   repository  = github_repository.this.name
@@ -113,12 +113,12 @@ resource "github_repository_ruleset" "required_reviews" {
   }
 
   dynamic "bypass_actors" {
-    for_each = var.review_bypass_actors
+    for_each = var.review_exempt_integrations
 
     content {
-      actor_id    = bypass_actors.value.actor_id
-      actor_type  = bypass_actors.value.actor_type
-      bypass_mode = "pull_request"
+      actor_id    = bypass_actors.value
+      actor_type  = "Integration"
+      bypass_mode = "exempt"
     }
   }
 
