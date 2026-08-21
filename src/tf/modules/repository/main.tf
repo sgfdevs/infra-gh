@@ -32,7 +32,7 @@ resource "github_team_repository" "this" {
 
 resource "github_repository_ruleset" "main" {
   # Keep approval enforcement in place until the review-only ruleset exists.
-  depends_on = [github_repository_ruleset.reviews]
+  depends_on = [github_repository_ruleset.required_reviews]
 
   name        = "Protect main"
   repository  = github_repository.this.name
@@ -87,10 +87,10 @@ resource "github_repository_ruleset" "main" {
   }
 }
 
-resource "github_repository_ruleset" "reviews" {
+resource "github_repository_ruleset" "required_reviews" {
   count = length(var.review_bypass_actors) == 0 ? 0 : 1
 
-  name        = "Require human approval"
+  name        = "Require pull request reviews"
   repository  = github_repository.this.name
   target      = "branch"
   enforcement = var.ruleset_enforcement
