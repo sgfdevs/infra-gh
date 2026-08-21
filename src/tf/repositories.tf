@@ -24,8 +24,9 @@ locals {
     infra-k8s-apps = {
       required_check = "checks / Kubernetes checks"
       review_bypass_actors = [{
-        actor_id   = local.deployment_automation_app_id
-        actor_type = "Integration"
+        actor_id    = local.deployment_automation_app_id
+        actor_type  = "Integration"
+        bypass_mode = "exempt"
       }]
     }
     infra-vm-workloads = {

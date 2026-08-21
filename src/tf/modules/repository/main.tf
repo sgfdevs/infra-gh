@@ -118,7 +118,7 @@ resource "github_repository_ruleset" "required_reviews" {
     content {
       actor_id    = bypass_actors.value.actor_id
       actor_type  = bypass_actors.value.actor_type
-      bypass_mode = "pull_request"
+      bypass_mode = bypass_actors.value.bypass_mode
     }
   }
 
