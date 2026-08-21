@@ -23,9 +23,8 @@ locals {
     }
     infra-k8s-apps = {
       required_check = "checks / Kubernetes checks"
-      review_bypass_actors = [{
-        actor_id    = local.deployment_automation_app_id
-        actor_type  = "Integration"
+      review_bypass_integrations = [{
+        id          = local.deployment_automation_app_id
         bypass_mode = "exempt"
       }]
     }
@@ -46,7 +45,7 @@ module "infrastructure_repository" {
     context        = each.value.required_check
     integration_id = local.github_actions_integration_id
   }]
-  review_bypass_actors = try(each.value.review_bypass_actors, [])
+  review_bypass_integrations = try(each.value.review_bypass_integrations, [])
   teams = concat(
     [
       {
