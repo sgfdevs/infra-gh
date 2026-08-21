@@ -52,6 +52,23 @@ variable "required_approving_review_count" {
   }
 }
 
+variable "review_bypass_actors" {
+  description = "Actors allowed to bypass required approving reviews through pull requests"
+  type = set(object({
+    actor_id   = number
+    actor_type = string
+  }))
+  default = []
+
+  validation {
+    condition = alltrue([
+      for actor in var.review_bypass_actors :
+      contains(["Integration", "OrganizationAdmin", "RepositoryRole", "Team"], actor.actor_type)
+    ])
+    error_message = "Review bypass actor types must be Integration, OrganizationAdmin, RepositoryRole, or Team."
+  }
+}
+
 variable "ruleset_enforcement" {
   description = "Main branch ruleset enforcement level"
   type        = string
