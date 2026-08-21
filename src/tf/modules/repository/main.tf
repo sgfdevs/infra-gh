@@ -103,6 +103,16 @@ resource "github_repository_ruleset" "required_reviews" {
   }
 
   dynamic "bypass_actors" {
+    for_each = [for team in var.teams : team if team.bypass]
+
+    content {
+      actor_id    = bypass_actors.value.id
+      actor_type  = "Team"
+      bypass_mode = "always"
+    }
+  }
+
+  dynamic "bypass_actors" {
     for_each = var.review_bypass_actors
 
     content {
