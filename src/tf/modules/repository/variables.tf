@@ -52,13 +52,10 @@ variable "required_approving_review_count" {
   }
 }
 
-variable "review_bypass_integrations" {
-  description = "GitHub Apps allowed to bypass required approving reviews"
-  type = set(object({
-    id          = number
-    bypass_mode = optional(string, "pull_request")
-  }))
-  default = []
+variable "review_exempt_integrations" {
+  description = "GitHub Apps exempt from required approving reviews"
+  type        = set(number)
+  default     = []
 }
 
 variable "ruleset_enforcement" {

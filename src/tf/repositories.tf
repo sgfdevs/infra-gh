@@ -22,11 +22,8 @@ locals {
       required_check = "Terraform checks"
     }
     infra-k8s-apps = {
-      required_check = "checks / Kubernetes checks"
-      review_bypass_integrations = [{
-        id          = local.deployment_automation_app_id
-        bypass_mode = "exempt"
-      }]
+      required_check             = "checks / Kubernetes checks"
+      review_exempt_integrations = [local.deployment_automation_app_id]
     }
     infra-vm-workloads = {
       required_check = "CI checks"
@@ -45,7 +42,7 @@ module "infrastructure_repository" {
     context        = each.value.required_check
     integration_id = local.github_actions_integration_id
   }]
-  review_bypass_integrations = try(each.value.review_bypass_integrations, [])
+  review_exempt_integrations = try(each.value.review_exempt_integrations, [])
   teams = concat(
     [
       {
