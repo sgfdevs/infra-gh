@@ -31,6 +31,9 @@ resource "github_team_repository" "this" {
 }
 
 resource "github_repository_ruleset" "main" {
+  # Keep approval enforcement in place until the review-only ruleset exists.
+  depends_on = [github_repository_ruleset.required_reviews]
+
   name        = "Protect main"
   repository  = github_repository.this.name
   target      = "branch"
@@ -61,7 +64,7 @@ resource "github_repository_ruleset" "main" {
     pull_request {
       allowed_merge_methods             = ["rebase", "squash"]
       dismiss_stale_reviews_on_push     = true
-      required_approving_review_count   = var.required_approving_review_count
+      required_approving_review_count   = length(var.review_bypass_actors) == 0 ? var.required_approving_review_count : 0
       required_review_thread_resolution = true
     }
 
@@ -80,6 +83,40 @@ resource "github_repository_ruleset" "main" {
           }
         }
       }
+    }
+  }
+}
+
+resource "github_repository_ruleset" "required_reviews" {
+  count = length(var.review_bypass_actors) == 0 ? 0 : 1
+
+  name        = "Require pull request reviews"
+  repository  = github_repository.this.name
+  target      = "branch"
+  enforcement = var.ruleset_enforcement
+
+  conditions {
+    ref_name {
+      include = ["~DEFAULT_BRANCH"]
+      exclude = []
+    }
+  }
+
+  dynamic "bypass_actors" {
+    for_each = var.review_bypass_actors
+
+    content {
+      actor_id    = bypass_actors.value.actor_id
+      actor_type  = bypass_actors.value.actor_type
+      bypass_mode = "pull_request"
+    }
+  }
+
+  rules {
+    pull_request {
+      allowed_merge_methods           = ["rebase", "squash"]
+      dismiss_stale_reviews_on_push   = true
+      required_approving_review_count = var.required_approving_review_count
     }
   }
 }

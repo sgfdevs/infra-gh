@@ -1,5 +1,6 @@
 locals {
   github_actions_integration_id = 15368
+  deployment_automation_app_id  = 4527359
 
   super_admin_team = {
     id         = module.super_admins_team.id
@@ -22,6 +23,10 @@ locals {
     }
     infra-k8s-apps = {
       required_check = "checks / Kubernetes checks"
+      review_bypass_actors = [{
+        actor_id   = local.deployment_automation_app_id
+        actor_type = "Integration"
+      }]
     }
     infra-vm-workloads = {
       required_check = "CI checks"
@@ -40,6 +45,7 @@ module "infrastructure_repository" {
     context        = each.value.required_check
     integration_id = local.github_actions_integration_id
   }]
+  review_bypass_actors = try(each.value.review_bypass_actors, [])
   teams = concat(
     [
       {

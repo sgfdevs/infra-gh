@@ -52,6 +52,15 @@ variable "required_approving_review_count" {
   }
 }
 
+variable "review_bypass_actors" {
+  description = "Actors allowed to bypass required approving reviews through pull requests"
+  type = set(object({
+    actor_id   = number
+    actor_type = string
+  }))
+  default = []
+}
+
 variable "ruleset_enforcement" {
   description = "Main branch ruleset enforcement level"
   type        = string
