@@ -21,6 +21,11 @@ locals {
     infra-gh = {
       required_check = "Terraform checks"
     }
+    infra-iam = {
+      description    = "Manages SGF Devs human identities and access assignments."
+      required_check = "Terraform checks"
+      visibility     = "private"
+    }
     infra-k8s-apps = {
       required_check             = "checks / Kubernetes checks"
       review_exempt_integrations = [local.deployment_automation_app_id]
@@ -36,8 +41,10 @@ module "infrastructure_repository" {
 
   source = "./modules/repository"
 
-  name   = each.key
-  topics = ["infra"]
+  name        = each.key
+  description = try(each.value.description, null)
+  visibility  = try(each.value.visibility, "public")
+  topics      = ["infra"]
   required_checks = [{
     context        = each.value.required_check
     integration_id = local.github_actions_integration_id
