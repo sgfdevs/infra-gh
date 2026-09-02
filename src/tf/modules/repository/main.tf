@@ -13,7 +13,7 @@ resource "github_repository" "this" {
   allow_merge_commit  = false
   allow_squash_merge  = true
   allow_rebase_merge  = true
-  allow_auto_merge    = true
+  allow_auto_merge    = var.allow_auto_merge
   allow_update_branch = true
 
   squash_merge_commit_title   = "PR_TITLE"
@@ -31,6 +31,8 @@ resource "github_team_repository" "this" {
 }
 
 resource "github_repository_ruleset" "main" {
+  count = var.enable_ruleset ? 1 : 0
+
   # Keep approval enforcement in place until the review-only ruleset exists.
   depends_on = [github_repository_ruleset.required_reviews]
 
@@ -88,7 +90,7 @@ resource "github_repository_ruleset" "main" {
 }
 
 resource "github_repository_ruleset" "required_reviews" {
-  count = length(var.review_exempt_integrations) == 0 ? 0 : 1
+  count = var.enable_ruleset && length(var.review_exempt_integrations) > 0 ? 1 : 0
 
   name        = "Require pull request reviews"
   repository  = github_repository.this.name

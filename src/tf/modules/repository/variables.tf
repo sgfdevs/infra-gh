@@ -69,6 +69,18 @@ variable "ruleset_enforcement" {
   }
 }
 
+variable "enable_ruleset" {
+  description = "Whether to manage a main branch ruleset"
+  type        = bool
+  default     = true
+}
+
+variable "allow_auto_merge" {
+  description = "Whether to allow pull requests to merge automatically"
+  type        = bool
+  default     = true
+}
+
 variable "teams" {
   description = "Teams with access to the repository"
   type = list(object({

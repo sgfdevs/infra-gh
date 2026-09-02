@@ -5,5 +5,5 @@ output "name" {
 
 output "ruleset_id" {
   description = "Main branch ruleset ID"
-  value       = github_repository_ruleset.main.id
+  value       = one(github_repository_ruleset.main[*].id)
 }
