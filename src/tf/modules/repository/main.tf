@@ -30,11 +30,6 @@ resource "github_team_repository" "this" {
   permission = var.teams[count.index].permission
 }
 
-moved {
-  from = github_repository_ruleset.main
-  to   = github_repository_ruleset.main[0]
-}
-
 resource "github_repository_ruleset" "main" {
   count = var.enable_ruleset ? 1 : 0
 
