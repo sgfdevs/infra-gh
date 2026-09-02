@@ -22,9 +22,11 @@ locals {
       required_check = "Terraform checks"
     }
     infra-iam = {
-      description    = "Manages SGF Devs human identities and access assignments."
-      required_check = "Terraform checks"
-      visibility     = "private"
+      allow_auto_merge = false
+      description      = "Manages SGF Devs human identities and access assignments."
+      enable_ruleset   = false
+      required_check   = "Terraform checks"
+      visibility       = "private"
     }
     infra-k8s-apps = {
       required_check             = "checks / Kubernetes checks"
@@ -41,10 +43,12 @@ module "infrastructure_repository" {
 
   source = "./modules/repository"
 
-  name        = each.key
-  description = try(each.value.description, null)
-  visibility  = try(each.value.visibility, "public")
-  topics      = ["infra"]
+  name             = each.key
+  description      = try(each.value.description, null)
+  visibility       = try(each.value.visibility, "public")
+  topics           = ["infra"]
+  allow_auto_merge = try(each.value.allow_auto_merge, true)
+  enable_ruleset   = try(each.value.enable_ruleset, true)
   required_checks = [{
     context        = each.value.required_check
     integration_id = local.github_actions_integration_id
