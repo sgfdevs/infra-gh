@@ -18,6 +18,9 @@ locals {
     infra-dns = {
       required_check = "Terraform checks"
     }
+    infra-gcp-core = {
+      required_check = "Terraform checks"
+    }
     infra-gh = {
       required_check = "Terraform checks"
     }
